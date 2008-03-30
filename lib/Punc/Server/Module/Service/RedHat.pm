@@ -1,6 +1,12 @@
 package Punc::Server::Module::Service::RedHat;
 
+use strict;
+use warnings;
 use base qw( Punc::Server::Module::Service );
+
+sub default_for {
+    return { 'operatingsystem' => [ 'redhat', 'fedora', 'centos' ] }
+}
 
 sub status {
     my ( $self, $args ) = @_;

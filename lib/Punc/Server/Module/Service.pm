@@ -5,28 +5,6 @@ use warnings;
 use base qw( Punc::Server::Module );
 use UNIVERSAL::require;
 
-sub new {
-    my $class = shift;
-    my $provider = get_provider();
-    $class = "${class}::${provider}";
-    $class->require or die $@;
-    bless {}, $class;
-}
-
-my %provider_map = (
-    'centos|fedora' => 'RedHat',
-);
-
-sub get_provider {
-    my $os = `facter operatingsystem`;
-
-    for ( keys %provider_map ) {
-        return $provider_map{$_} if $os =~ /$_/i;
-    }
-
-    return 'RedHat' # default;
-}
-
 sub status {
     die;
 }
