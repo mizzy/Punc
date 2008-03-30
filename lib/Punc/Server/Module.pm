@@ -33,7 +33,6 @@ sub exec {
 
 sub description {
     my $class = shift;
-    my $parser = Pod::Text->new;
     return `perldoc -t $class`;
 }
 
