@@ -11,28 +11,50 @@ __END__
 
 =head1 NAME
 
-Punc -
+Punc - Perl Unified Network Controller
 
-=head1 SYNOPSIS
+=head1 SOURCE
 
-  use Punc;
-
-=head1 DESCRIPTION
-
-Punc is
-
-=head1 AUTHOR
-
-Gosuke Miyashita E<lt>gosukenator@gmail.comE<gt>
-
-=head1 SEE ALSO
+http://coderepos.org/share/browser/lang/perl/Punc
 
 =head1 REPOSITORY
 
   svn co http://svn.coderepos.org/share/lang/perl/Punc/trunk Punc
 
-Punc is Subversion repository is hosted at L<http://coderepos.org/share/>.
-patches and collaborators are welcome.
+=head1 DESCRIPTION
+
+Punc は Python 製のシステム管理フレームワーク Func の Perl 実装です。現状はまだプロトタイプです。
+
+
+=head1 USAGE
+
+=head2 デーモン起動
+
+  # ./bin/puncd
+
+=head2 punc コマンドでのモジュール実行
+
+  # ./bin/punc localhost call service description
+  # ./bin/punc localhost call service status httpd
+
+=head2 Punc::Client でのモジュール実行
+
+  use Punc::Client;
+  my $punc = Punc::Client->new('localhost');
+  my $res  = $punc->service->status('httpd');
+
+=head1 TODO
+
+たくさん
+
+
+=head1 AUTHOR
+
+Gosuke Miyashita E<lt>gosukenator at gmail.comE<gt>
+
+=head1 SEE ALSO
+
+L<https://fedorahosted.org/func/>
 
 =head1 LICENSE
 
