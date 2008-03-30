@@ -25,6 +25,7 @@ http://coderepos.org/share/browser/lang/perl/Punc
 
 Punc は Python 製のシステム管理フレームワーク Func の Perl 実装です。現状はまだプロトタイプです。
 
+Punc では Puppet の様なプロバイダメカニズムを用意しており、その実現のために Ruby 製の Facter (L<http://reductivelabs.com/projects/facter/>) が必要となっています。（Perl で Facter と同じことができるモジュールをご存知の方は教えてください。）
 
 =head1 USAGE
 
