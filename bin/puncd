@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Punc::Server::Daemon;
+
+Punc::Server::Daemon->start_daemon;
+

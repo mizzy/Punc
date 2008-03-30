@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Punc::Client;
+use JSON;
+
+my ( $target, $call, $module, $method, @args ) = @ARGV;
+
+my $punc = Punc::Client->new($target);
+
+my $res = $punc->$module->$method(\@args);
+
+for (@$res) {
+    if ( $method eq 'description' ) {
+        print $_->{response}->{result};
+    }
+    else {
+        print to_json($_) . "\n";
+    }
+}
+
