@@ -17,7 +17,7 @@ sub status {
 sub _command {
     my ( $self, $service, $command ) = @_;
     if ( -f "/etc/init.d/$service" ) {
-        `/sbin/service $service status`;
+        `/sbin/service $service $command`;
         return $?;
     }
     else {
