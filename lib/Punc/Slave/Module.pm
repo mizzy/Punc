@@ -1,4 +1,4 @@
-package Punc::Server::Module;
+package Punc::Slave::Module;
 
 use strict;
 use warnings;

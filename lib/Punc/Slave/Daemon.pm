@@ -1,4 +1,4 @@
-package Punc::Server::Daemon;
+package Punc::Slave::Daemon;
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ sub dispatch_request {
     my ( $module, $method, $args ) = @_;
 
     $module = ucfirst $module;
-    $module = "Punc::Server::Module::$module";
+    $module = "Punc::Slave::Module::$module";
     $module->require or die $@;
 
     my $res;

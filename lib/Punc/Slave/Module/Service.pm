@@ -1,8 +1,8 @@
-package Punc::Server::Module::Service;
+package Punc::Slave::Module::Service;
 
 use strict;
 use warnings;
-use base qw( Punc::Server::Module );
+use base qw( Punc::Slave::Module );
 use UNIVERSAL::require;
 
 sub status {
@@ -18,7 +18,7 @@ __END__
 
 =head1 NAME
 
-Punc::Server::Module::Service - Punc module for service control.
+Punc::Slave::Module::Service - Punc module for service control.
 
 =head1 SYNOPSIS
 
@@ -31,7 +31,7 @@ Punc::Server::Module::Service - Punc module for service control.
 
 =head1 DESCRIPTION
 
-Punc::Server::Module::Service is the Punc module for service control.
+Punc::Slave::Module::Service is the Punc module for service control.
 
 =head1 METHODS
 

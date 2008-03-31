@@ -1,8 +1,8 @@
-package Punc::Server::Module::Service::RedHat;
+package Punc::Slave::Module::Service::RedHat;
 
 use strict;
 use warnings;
-use base qw( Punc::Server::Module::Service );
+use base qw( Punc::Slave::Module::Service );
 
 sub default_for {
     return { 'operatingsystem' => [ 'redhat', 'fedora', 'centos' ] }

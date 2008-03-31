@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Punc::Server::Daemon;
+use Punc::Slave::Daemon;
 
-Punc::Server::Daemon->start_daemon;
+Punc::Slave::Daemon->start_daemon;
 
