@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Pod::Text;
 use Module::Pluggable;
+use Punc::Util;
 
 sub new {
     my $class = shift;
@@ -16,7 +17,7 @@ sub new {
         next unless $default_for;
 
         my ( $fact ) = keys %$default_for;
-        if ( grep { `facter $fact` =~ /$_/i } @{ $default_for->{$fact} } ) {
+        if ( grep { Punc::Util->fact($fact) =~ /$_/i } @{ $default_for->{$fact} } ) {
             $class = $module;
         }
     }
