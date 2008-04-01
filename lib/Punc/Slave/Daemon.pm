@@ -9,7 +9,7 @@ use JSON;
 use UNIVERSAL::require;
 
 sub start_daemon {
-    my $d = HTTP::Daemon->new( LocalPort => 7080 ) || die;
+    my $d = HTTP::Daemon->new( LocalPort => 7080, ReuseAddr => 1 ) || die;
 
     print "Please contact me at: <URL:", $d->url, ">\n";
     while ( my $c = $d->accept ) {
