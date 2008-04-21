@@ -7,3 +7,9 @@ all_pod_files_spelling_ok('lib');
 __DATA__
 Gosuke Miyashita
 Punc
+TODO
+Facter
+punc
+SSL
+puncmaster
+puncmasterd

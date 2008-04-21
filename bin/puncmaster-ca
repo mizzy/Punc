@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use FindBin;
+use File::Spec;
+use lib File::Spec->catdir("$FindBin::Bin/..", 'lib');
+use Punc;
+use Punc::Master::CA;
+use Getopt::Long;
+use Pod::Usage;
+
+GetOptions(
+    \my %options,
+    '--sign',
+    '--list',
+    '--confdir=s',
+);
+
+my $confdir = $options{confdir} || "$FindBin::Bin/../etc";
+my $ssldir  = File::Spec->catdir($confdir, 'ssl');
+my $ca = Punc::Master::CA->new({ ssldir  => $ssldir });
+
+for ( qw/ sign list / ) {
+    no strict 'refs';
+    &$_(shift) if $options{$_};
+}
+
+sub sign {
+    my $hostname = shift;
+    unless ( $hostname ) {
+        pod2usage();
+        exit 1;
+    }
+
+    $ca->sign($hostname);
+}
+
+
+sub list {
+
+}
+
+__END__
+
+=head1 NAME
+
+puncmaster-ca - CA command line tool for Punc.
+
+=head1 SYNOPSIS
+
+    $ puncmaster-ca [--sign|--list] hostname

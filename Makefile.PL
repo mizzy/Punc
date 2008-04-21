@@ -2,7 +2,18 @@ use inc::Module::Install;
 name 'Punc';
 all_from 'lib/Punc.pm';
 
-requires $_ for (qw/ JSON::RPC::Client /);
+requires $_ for (qw/
+                       JSON
+                       JSON::RPC::Client
+                       Pfacter
+                       UNIVERSAL::require
+                       YAML
+                       Module::Pluggable
+                       Crypt::OpenSSL::PKCS10
+                       Crypt::OpenSSL::RSA
+                       Crypt::OpenSSL::CA
+                       HTTP::Daemon
+                   /);
 
 build_requires 'Test::More';
 use_test_base;

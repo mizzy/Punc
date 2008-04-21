@@ -2,9 +2,7 @@ package Punc::Slave::Module;
 
 use strict;
 use warnings;
-use Pod::Text;
 use Module::Pluggable;
-use Punc::Util;
 
 sub new {
     my $class = shift;

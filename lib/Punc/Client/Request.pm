@@ -18,14 +18,14 @@ sub request {
     my $response = Punc::Client::Response->new;
     for my $host ( @{ $self->{hosts} } ) {
         my $client = new JSON::RPC::Client;
-        my $url    = "http://$host:7080/$self->{module}";
-
+        my $url    = "https://$host:7080/$self->{module}";
         my $callobj = {
             method  => $self->{method},
             params  => $self->{args},
         };
 
         my $res = $client->call($url, $callobj);
+
         if( $res ) {
             $response->add({
                 host     => $host,
