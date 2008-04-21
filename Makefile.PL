@@ -12,7 +12,11 @@ requires $_ for (qw/
                        Crypt::OpenSSL::PKCS10
                        Crypt::OpenSSL::RSA
                        Crypt::OpenSSL::CA
-                       HTTP::Daemon
+                       HTTP::Daemon::SSL
+                       File::Spec
+                       Getopt::Long
+                       Pod::Usage
+                       File::Path
                    /);
 
 build_requires 'Test::More';
