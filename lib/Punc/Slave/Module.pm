@@ -3,6 +3,7 @@ package Punc::Slave::Module;
 use strict;
 use warnings;
 use Module::Pluggable;
+use Punc::Util;
 
 sub new {
     my $class = shift;
