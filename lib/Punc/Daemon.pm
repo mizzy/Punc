@@ -25,6 +25,7 @@ sub run {
         ReuseAddr      => 1,
         SSL_key_file   => $self->{ssl_key},
         SSL_cert_file  => $self->{ssl_cert},
+        SSL_ca_file    => $self->{ca_cert} || '',
     ) || die $!;
 
     print "Please contact me at: <URL:", $d->url, ">\n";

@@ -20,6 +20,7 @@ sub new {
 
     $self->{ssl_key}  = File::Spec->catfile($self->{keydir}, "${fqdn}.key");
     $self->{ssl_cert} = File::Spec->catfile($self->{certdir}, "${fqdn}.cert");
+    $self->{ca_cert}  = File::Spec->catfile($self->{certdir}, 'ca.cert');
 
     return $self;
 }
@@ -71,10 +72,16 @@ sub _request_cert {
 
     if( $res ) {
         my $cert = $res->content->{result}->{cert};
-        open my $out, '>', File::Spec->catfile($self->{certdir}, "${fqdn}.cert")
+        open my $cert_fh, '>', File::Spec->catfile($self->{certdir}, "${fqdn}.cert")
             or die;
-        print $out $cert;
-        close $out;
+        print $cert_fh $cert;
+        close $cert_fh;
+
+        my $cacert = $res->content->{result}->{cacert};
+        open my $cacert_fh, '>', File::Spec->catfile($self->{certdir}, 'ca.cert')
+            or die;
+        print $cacert_fh $cacert;
+        close $cacert_fh;
     }
     else {
         warn 'error';

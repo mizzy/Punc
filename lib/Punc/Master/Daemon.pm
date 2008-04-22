@@ -91,13 +91,21 @@ sub handle_request {
         sleep 1;
     }
 
-    open my $in, '<', File::Spec->catfile($self->{ca}->{certdir}, "${hostname}.cert") 
-        or die;
-    my $cert = do { local $/; <$in> };
-    close $in;
-    return { cert => $cert };
+    open my $cert_fh, '<', File::Spec->catfile(
+        $self->{ca}->{certdir},
+        "${hostname}.cert"
+    ) or die $!;
+    my $cert = do { local $/; <$cert_fh> };
+    close $cert_fh;
 
+    open my $cacert_fh, '<', File::Spec->catfile(
+        $self->{ca}->{cadir},
+        'ca.cert'
+    ) or die $!;
+    my $cacert = do { local $/; <$cacert_fh> };
+    close $cacert_fh;
 
+    return { cert => $cert, cacert => $cacert };
 }
 
 
