@@ -17,6 +17,7 @@ requires $_ for (qw/
                        Getopt::Long
                        Pod::Usage
                        File::Path
+                       Crypt::SSLeay
                    /);
 
 build_requires 'Test::More';

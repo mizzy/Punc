@@ -20,12 +20,16 @@ sub new {
 
 sub run {
     my $self = shift;
+
+    my $ssl_verify_mode = ref $self eq 'Punc::Master::Daemon' ? 0x00 : 0x07;
+
     my $d = HTTP::Daemon::SSL->new(
-        LocalPort      => $self->{port},
-        ReuseAddr      => 1,
-        SSL_key_file   => $self->{ssl_key},
-        SSL_cert_file  => $self->{ssl_cert},
-        SSL_ca_file    => $self->{ca_cert} || '',
+        LocalPort       => $self->{port},
+        ReuseAddr       => 1,
+        SSL_key_file    => $self->{ssl_key},
+        SSL_cert_file   => $self->{ssl_cert},
+        SSL_ca_file     => $self->{ca_cert} || '',
+        SSL_verify_mode => $ssl_verify_mode,
     ) || die $!;
 
     print "Please contact me at: <URL:", $d->url, ">\n";

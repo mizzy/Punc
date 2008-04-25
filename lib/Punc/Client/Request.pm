@@ -5,10 +5,23 @@ use warnings;
 use JSON;
 use JSON::RPC::Client;
 use Punc::Client::Response;
+use File::Spec;
+
 our $AUTOLOAD;
 
 sub new {
     my ( $class, $args ) = @_;
+
+    $ENV{HTTPS_VERSION}   = 3;
+    $ENV{HTTPS_CERT_FILE} = File::Spec->catfile(
+        $args->{confdir}, 'ssl', 'ca', 'ca.cert'
+    );
+    $ENV{HTTPS_KEY_FILE}  = File::Spec->catfile(
+        $args->{confdir}, 'ssl', 'ca', 'ca.key'
+    );
+
+    $args->{client} = JSON::RPC::Client->new;
+
     bless $args, $class;
 }
 
@@ -17,14 +30,14 @@ sub request {
 
     my $response = Punc::Client::Response->new;
     for my $host ( @{ $self->{hosts} } ) {
-        my $client = new JSON::RPC::Client;
+
         my $url    = "https://$host:7080/$self->{module}";
         my $callobj = {
             method  => $self->{method},
             params  => $self->{args},
         };
 
-        my $res = $client->call($url, $callobj);
+        my $res = $self->{client}->call($url, $callobj);
 
         if( $res ) {
             $response->add({

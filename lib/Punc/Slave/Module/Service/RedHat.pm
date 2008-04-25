@@ -4,6 +4,9 @@ use strict;
 use warnings;
 use base qw( Punc::Slave::Module::Service );
 
+### TODO: もっと簡単に定義できないか考える
+### default_for { operatingsystem => [ qw/ redhat fedora centos / ] } とか
+### use Punc::Slave::Module::Service { operatingsystem => [ qw / fedora / ] } とか
 sub default_for {
     return { 'operatingsystem' => [ 'redhat', 'fedora', 'centos' ] }
 }

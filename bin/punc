@@ -15,7 +15,7 @@ my $punc = Punc::Client->new($target);
 my $res = $punc->$module->$method(\@args);
 
 for (@$res) {
-    if ( $method eq 'description' ) {
+    if ( $method eq 'description' || $method eq 'desc' ) {
         print $_->{response}->{result};
     }
     else {

@@ -6,13 +6,18 @@ our $VERSION = '0.01';
 our $AUTOLOAD;
 use Punc::Client::Request;
 use UNIVERSAL::require;
+use FindBin;
 
 sub new {
     my ( $class, $target ) = @_;
 
+    ### TODO: confdir のデフォルト値を変更
     ## TODO: $target から対象ホストをリストアップ
 
-    bless { hosts => [ $target ] }, $class;
+    bless {
+        hosts   => [ $target ],
+        confdir => "$FindBin::Bin/../etc",
+    }, $class;
 }
 
 sub AUTOLOAD {
@@ -22,8 +27,9 @@ sub AUTOLOAD {
     return if $module eq 'DESTROY';
 
     return Punc::Client::Request->new({
-        hosts  => $self->{hosts},
-        module => $module,
+        confdir => $self->{confdir},
+        hosts   => $self->{hosts},
+        module  => $module,
     });
 }
 

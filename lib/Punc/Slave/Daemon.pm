@@ -21,7 +21,6 @@ sub new {
     $self->{ssl_key}  = File::Spec->catfile($self->{keydir}, "${fqdn}.key");
     $self->{ssl_cert} = File::Spec->catfile($self->{certdir}, "${fqdn}.cert");
     $self->{ca_cert}  = File::Spec->catfile($self->{certdir}, 'ca.cert');
-
     return $self;
 }
 
@@ -96,7 +95,7 @@ sub handle_request {
     $module->require or die $@;
 
     my $res;
-    if ( $method eq 'description' ) {
+    if ( $method eq 'description' || $method eq 'desc' ) {
         $res = $module->description;
     }
     else {
