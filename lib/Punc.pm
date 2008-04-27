@@ -79,14 +79,16 @@ puncmasterd は SSL 証明書発行/管理用デーモンです。
 
   # ./bin/puncd
 
+puncmasterdとは別ホスト上で動かす場合、./etc/puncd.yaml の puncmaster_host を適宜変更してから puncd を起動してください。
+
 =head2 puncmaster-ca コマンドによる証明書への署名
 
   # ./bin/puncmaster-ca --sign host.example.com
 
 =head2 punc コマンドでのモジュール実行
 
-  # ./bin/punc localhost call service description
-  # ./bin/punc localhost call service status httpd
+  # ./bin/punc "*" call service description
+  # ./bin/punc "*" call service status httpd
 
 =head2 Punc::Client でのモジュール実行
 
@@ -96,7 +98,7 @@ puncmasterd は SSL 証明書発行/管理用デーモンです。
 
 =head1 TODO
 
-とりあえず、YAPC::Asia 2008 までには以下のあたりは実装する。 
+とりあえず、YAPC::Asia 2008 までには以下のあたりは実装する。
 
  * SSL 実装
  * ホスト管理（とりあえずはファイルベース。YAMLとかLDAPに切り替えやすいようにする。）
