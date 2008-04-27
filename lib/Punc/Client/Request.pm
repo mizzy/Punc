@@ -12,12 +12,14 @@ our $AUTOLOAD;
 sub new {
     my ( $class, $args ) = @_;
 
+    my $confdir = $args->{conf}->{confdir};
+
     $ENV{HTTPS_VERSION}   = 3;
     $ENV{HTTPS_CERT_FILE} = File::Spec->catfile(
-        $args->{confdir}, 'ssl', 'ca', 'ca.cert'
+        $confdir, 'ssl', 'ca', 'ca.cert'
     );
     $ENV{HTTPS_KEY_FILE}  = File::Spec->catfile(
-        $args->{confdir}, 'ssl', 'ca', 'ca.key'
+        $confdir, 'ssl', 'ca', 'ca.key'
     );
 
     $args->{client} = JSON::RPC::Client->new;
@@ -31,13 +33,13 @@ sub request {
     my $response = Punc::Client::Response->new;
     for my $host ( @{ $self->{hosts} } ) {
 
-        my $url    = "https://$host:7080/$self->{module}";
+        my $url     = "https://$host:7080/$self->{module}";
         my $callobj = {
             method  => $self->{method},
             params  => $self->{args},
         };
 
-        my $res = $self->{client}->call($url, $callobj);
+        my $res = $self->{client}->call($url, $callobj) or warn @?;
 
         if( $res ) {
             $response->add({
