@@ -18,6 +18,8 @@ requires $_ for (qw/
                        Pod::Usage
                        File::Path
                        Crypt::SSLeay
+                       Moose
+                       MooseX::ClassAttribute
                    /);
 
 build_requires 'Test::More';
