@@ -2,9 +2,7 @@ package Punc::Slave::Module::Service;
 
 use strict;
 use warnings;
-
 use Moose;
-
 extends 'Punc::Slave::Module';
 
 package Punc::Slave::Module::Service::Role;
