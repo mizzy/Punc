@@ -13,8 +13,6 @@ requires 'status';
 
 __END__
 
-=encoding utf8
-
 =head1 NAME
 
 Punc::Slave::Module::Service - Punc module for service control.
