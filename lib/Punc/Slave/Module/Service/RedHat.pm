@@ -2,18 +2,13 @@ package Punc::Slave::Module::Service::RedHat;
 
 use strict;
 use warnings;
-use base qw( Punc::Slave::Module::Service );
+use Punc::Slave::Module::Service { operatingsystem => [ qw / redhat fedora centos / ] };
+use Moose;
 
-### TODO: もっと簡単に定義できないか考える
-### default_for { operatingsystem => [ qw/ redhat fedora centos / ] } とか
-### use Punc::Slave::Module::Service { operatingsystem => [ qw / fedora / ] } とか
-sub default_for {
-    return { 'operatingsystem' => [ 'redhat', 'fedora', 'centos' ] }
-}
+with 'Punc::Slave::Module::Service::Role';
 
 sub status {
     my ( $self, $args ) = @_;
-
     return $self->_command($args->[0], 'status');
 }
 

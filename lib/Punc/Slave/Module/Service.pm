@@ -2,13 +2,14 @@ package Punc::Slave::Module::Service;
 
 use strict;
 use warnings;
-use base qw( Punc::Slave::Module );
-use UNIVERSAL::require;
 
-sub status {
-    die;
-}
+use Moose;
 
+extends 'Punc::Slave::Module';
+
+package Punc::Slave::Module::Service::Role;
+use Moose::Role;
+requires 'status';
 
 1;
 

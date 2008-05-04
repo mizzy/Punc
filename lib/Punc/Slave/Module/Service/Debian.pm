@@ -2,11 +2,11 @@ package Punc::Slave::Module::Service::Debian;
 
 use strict;
 use warnings;
-use base qw( Punc::Slave::Module::Service );
+use Punc::Slave::Module::Service { operatingsystem => [ qw / debian ubuntu / ] };
+use Moose;
 
-sub default_for {
-    return { 'operatingsystem' => [ 'debian', 'ubuntu' ] }
-}
+with 'Punc::Slave::Module::Service::Role';
+
 
 sub status {
     my ( $self, $args ) = @_;
