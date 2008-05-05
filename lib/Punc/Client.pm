@@ -8,7 +8,6 @@ use Punc::ConfigLoader;
 use Punc::Client::Request;
 use UNIVERSAL::require;
 use FindBin;
-use UNIVERSAL::require;
 
 sub new {
     my ( $class, $target ) = @_;

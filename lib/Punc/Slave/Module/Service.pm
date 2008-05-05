@@ -20,11 +20,11 @@ Punc::Slave::Module::Service - Punc module for service control.
 =head1 SYNOPSIS
 
   # with punc command
-  $ sudo punc "*" call service status httpd
+  $ sudo punc "*" call service status --service=httpd
 
   # with Punc::Client module
   my $punc = Punc::Client->new($target);
-  my $res = $punc->service->status('httpd');
+  my $res  = $punc->service->status({ service => 'httpd' });
 
 =head1 DESCRIPTION
 

@@ -8,11 +8,15 @@ use lib File::Spec->catdir("$FindBin::Bin/..", 'lib');
 use Punc::Client;
 use JSON;
 
-my ( $target, $call, $module, $method, @args ) = @ARGV;
+my $target  = shift;
+my $call    = shift;
+my $module  = shift;
+my $method  = shift;
+my $options = get_options();
 
 my $punc = Punc::Client->new($target);
 
-my $res = $punc->$module->$method(\@args);
+my $res = $punc->$module->$method($options);
 
 for (@$res) {
     if ( $method eq 'description' || $method eq 'desc' ) {
@@ -23,3 +27,15 @@ for (@$res) {
     }
 }
 
+exit;
+
+sub get_options {
+    my $options = {};
+    while ($#ARGV >= 0 && $ARGV[0] =~ /^--?([^=-][^=]*)(=?)(.*)/) {
+        my $var = $1;
+        my $value = ($2 eq "") ? 1 : $3;
+        $options->{$var} = $value;
+        shift @ARGV;
+    }
+    return $options;
+}

@@ -60,6 +60,7 @@ sub AUTOLOAD {
 
     $self->{method} = $method;
     $self->{args}   = $args;
+
     return $self->request;
 }
 

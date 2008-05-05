@@ -9,7 +9,7 @@ with 'Punc::Slave::Module::Service::Role';
 
 sub status {
     my ( $self, $args ) = @_;
-    return $self->_command($args->[0], 'status');
+    return $self->_command($args->{service}, 'status');
 }
 
 sub _command {
