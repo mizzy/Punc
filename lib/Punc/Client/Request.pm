@@ -61,6 +61,12 @@ sub AUTOLOAD {
     $self->{method} = $method;
     $self->{args}   = $args;
 
+    if ( $self->{module} eq 'file' and $self->{method} eq 'copy' ) {
+        open my $fh, '<', $args->{src} or die $!;
+        $args->{content} = do { local $/; <$fh> };
+        close $fh;
+    }
+
     return $self->request;
 }
 

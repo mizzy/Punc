@@ -27,7 +27,7 @@ sub delegate {
     my $self = shift;
 
     $self->search_path( new => ref $self );
-    my @modules = $self->plugins;
+    my @modules = ( $self->plugins, ref $self );
     my $module_to_delegate;
     for my $module ( @modules ) {
         next if $module =~ /Role$/;
