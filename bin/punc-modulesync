@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use FindBin;
+use lib File::Spec->catdir("$FindBin::Bin/..", 'lib');
+use Punc::Client;
+use Path::Class qw( dir file );
+
+my $target = shift || '*';
+
+my $punc    = Punc::Client->new($target);
+my $results = $punc->punc->info;
+
+for my $result ( @$results ) {
+    my $punc_path = $result->{response}->{result}->{punc_path};
+    my $dest_module_dir = dir( $result->{response}->{result}->{punc_path}, 'Punc', 'Slave', 'Module' );
+
+    my $src_module_dir = dir( dir(`perldoc -l Punc`)->parent, 'Punc', 'Slave', 'Module' );
+    $src_module_dir->recurse(
+        callback => sub {
+            my $file = shift;
+            return unless -f $file;
+            my $dest_file = $file;
+            $dest_file =~ s!^$src_module_dir/!!g;
+
+            my $punc = Punc::Client->new($result->{host});
+            $punc->file->copy({
+                src  => $file->stringify,
+                dest => file($dest_module_dir, $dest_file)->stringify,
+            });
+        }
+    );
+}
+
+
+

@@ -2,7 +2,7 @@ package Punc::Slave::Module::File;
 
 use strict;
 use warnings;
-
+use Path::Class qw( dir file );
 use Punc::Slave::Module { operatingsystem => [ qw/ .* / ] };
 
 sub md5sum {
@@ -12,10 +12,14 @@ sub md5sum {
 
 sub copy {
     my ( $self, $args ) = @_;
-    my $dest = $args->{dest} || $args->{src};
-    open my $fh, '>', $dest or die $!;
+    my $dest_file = $args->{dest} || $args->{src};
+    my $dest_dir  = dir($dest_file)->parent;
+    $dest_dir->mkpath unless -d $dest_dir;
+
+    open my $fh, '>', $dest_file or die $!;
     print $fh $args->{content};
     close $fh;
+
     return;
 }
 
