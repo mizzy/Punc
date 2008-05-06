@@ -39,6 +39,7 @@ sub delegate {
         }
     }
 
+    Punc->context->log( info => "Delegated to $module_to_delegate." );
     bless $self, $module_to_delegate;
 }
 

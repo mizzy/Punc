@@ -44,6 +44,17 @@ sub _pfact {
     return $pfact;
 }
 
+sub logger {
+    my $self = shift;
+    require Punc::Logger::StdErr;
+    $self->{logger} ||= 'Punc::Logger::StdErr';
+}
+
+sub log {
+    my ( $self, $level, $message ) = @_;
+    $self->logger->log( $level => $message );
+}
+
 1;
 __END__
 
