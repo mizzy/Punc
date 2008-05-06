@@ -48,11 +48,6 @@ sub delegate {
     }
 }
 
-sub exec {
-    my ( $self, $method, $args ) = @_;
-    $self->$method($args);
-}
-
 sub description {
     my $class = shift;
     return { result => `perldoc -t $class` || '' };

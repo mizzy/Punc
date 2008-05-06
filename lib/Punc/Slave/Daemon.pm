@@ -102,7 +102,7 @@ sub handle_request {
         my $obj = $module->new;
         my $module_to_delegate = $obj->delegate;
         if ( $module_to_delegate ) {
-            $res = $module_to_delegate->exec($method, $args);
+            $res = $module_to_delegate->$method($args);
         }
         else {
             Punc->context->log( error => $obj->errstr );
