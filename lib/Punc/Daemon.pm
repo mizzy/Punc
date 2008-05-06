@@ -44,6 +44,8 @@ sub run {
                 $content->{params},
             );
 
+            Punc->context->log( error => $res->{error} ) if $res->{error};
+
             my $json = to_json({
                 result => $res->{result},
                 error  => $res->{error},

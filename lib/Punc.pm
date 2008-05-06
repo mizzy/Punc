@@ -37,7 +37,7 @@ sub _pfact {
         if $self->{'pfact'}->{lc( $module )};
 
     $module = 'Pfacter::' . lc $module;
-    $module->require or die $@;
+    $module->require or $self->log( error => $@ );
 
     my $pfact = $module->pfact($self);
     chomp $pfact;

@@ -1,11 +1,9 @@
 package Punc::Slave::Module;
 
-use strict;
-use warnings;
 use Moose;
 use Module::Pluggable;
 
-extends 'Class::Data::Inheritable';
+extends 'Class::Data::Inheritable', 'Class::ErrorHandler';
 
 __PACKAGE__->mk_classdata('default_for');
 
@@ -19,8 +17,7 @@ sub import {
 
 sub new {
     my $class = shift;
-    my $self = bless {}, $class;
-    $self->delegate;
+    bless {}, $class;
 }
 
 sub delegate {
@@ -30,17 +27,25 @@ sub delegate {
     my $module_to_delegate;
     for my $module ( @modules ) {
         next if $module =~ /Role$/;
-        $module->require or die $@;
+        $module->require or do {
+            return $self->error($@);
+        };
         my $default_for = $module->default_for;
         next unless $default_for;
         my ( $fact ) = keys %$default_for;
         if ( grep { Punc->context->fact($fact) =~ /$_/i } @{ $default_for->{$fact} } ) {
             $module_to_delegate = $module;
+            last;
         }
     }
 
-    Punc->context->log( info => "Delegated to $module_to_delegate." );
-    bless $self, $module_to_delegate;
+    if ( $module_to_delegate ) {
+        Punc->context->log( info => "Delegated to $module_to_delegate." );
+        bless $self, $module_to_delegate;
+    }
+    else {
+        return $self->error('Could not find a module to delegate.');
+    }
 }
 
 sub exec {

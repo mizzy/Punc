@@ -1,7 +1,11 @@
 package Punc::Hosts;
 
-sub get_hosts {
-    die;
-}
+use Moose;
+
+package Punc::Hosts::Role;
+
+use Moose::Role;
+
+require 'get_hosts';
 
 1;

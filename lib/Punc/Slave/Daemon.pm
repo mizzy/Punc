@@ -72,13 +72,13 @@ sub _request_cert {
     if( $res ) {
         my $cert = $res->content->{result}->{cert};
         open my $cert_fh, '>', File::Spec->catfile($self->{certdir}, "${fqdn}.cert")
-            or die;
+            or die $!;
         print $cert_fh $cert;
         close $cert_fh;
 
         my $cacert = $res->content->{result}->{cacert};
         open my $cacert_fh, '>', File::Spec->catfile($self->{certdir}, 'ca.cert')
-            or die;
+            or die $!;
         print $cacert_fh $cacert;
         close $cacert_fh;
     }
@@ -92,7 +92,7 @@ sub handle_request {
 
     $module = ucfirst $module;
     $module = "Punc::Slave::Module::$module";
-    $module->require or die $@;
+    $module->require or do { return { error => "no such module: $module" } };
 
     my $res;
     if ( $method eq 'description' || $method eq 'desc' ) {
@@ -100,7 +100,14 @@ sub handle_request {
     }
     else {
         my $obj = $module->new;
-        $res = $obj->exec($method, $args);
+        my $module_to_delegate = $obj->delegate;
+        if ( $module_to_delegate ) {
+            $res = $module_to_delegate->exec($method, $args);
+        }
+        else {
+            Punc->context->log( error => $obj->errstr );
+            return { error => $obj->errstr };
+        }
     }
 
     return $res;

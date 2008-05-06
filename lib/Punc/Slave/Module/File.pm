@@ -16,7 +16,11 @@ sub copy {
     my $dest_dir  = dir($dest_file)->parent;
     $dest_dir->mkpath unless -d $dest_dir;
 
-    open my $fh, '>', $dest_file or die $!;
+    open my $fh, '>', $dest_file or do {
+        Punc->context->log( error => $! );
+        return { error => $! };
+    };
+
     print $fh $args->{content};
     close $fh;
 

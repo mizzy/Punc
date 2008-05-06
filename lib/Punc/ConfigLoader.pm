@@ -11,8 +11,8 @@ sub new {
 
 sub load {
     my ( $self, $file ) = @_;
-    my $config = YAML::LoadFile($file) or die $!;
-    return $config;
+    my $config = YAML::LoadFile($file) or Punc->context->log( error => $! );
+    return $config || {};
 }
 
 1;

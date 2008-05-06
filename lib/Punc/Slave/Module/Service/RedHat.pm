@@ -2,7 +2,7 @@ package Punc::Slave::Module::Service::RedHat;
 
 use strict;
 use warnings;
-use Punc::Slave::Module::Service { operatingsystem => [ qw / redhat fedora centos / ] };
+use Punc::Slave::Module::Service { operatingsystem => [ qw / redhat centos fedora / ] };
 use Moose;
 
 with 'Punc::Slave::Module::Service::Role';

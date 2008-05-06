@@ -94,14 +94,16 @@ sub handle_request {
     open my $cert_fh, '<', File::Spec->catfile(
         $self->{ca}->{certdir},
         "${hostname}.cert"
-    ) or die $!;
+    ) or do { return { error => $! } };
+
     my $cert = do { local $/; <$cert_fh> };
     close $cert_fh;
 
     open my $cacert_fh, '<', File::Spec->catfile(
         $self->{ca}->{cadir},
         'ca.cert'
-    ) or die $!;
+    ) or do { return { error => $! } };
+
     my $cacert = do { local $/; <$cacert_fh> };
     close $cacert_fh;
 

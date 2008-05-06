@@ -10,5 +10,4 @@ sub log {
     warn "[$level] $message\n";
 }
 
-
 1;
