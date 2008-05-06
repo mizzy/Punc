@@ -32,7 +32,22 @@ Punc::Slave::Module::Service is the Punc module for service control.
 
 =head2 status({ service => 'service name' })
 
-Show service status.
+Show service status.Following return values are expected.
 
+=over
+
+=item result: 0
+
+Service is alive.
+
+=item result: not 0
+
+Service is dead.
+
+=item error: error string
+
+Error occurs.(e.g.: Service does not exist.)
+
+=back
 
 =cut

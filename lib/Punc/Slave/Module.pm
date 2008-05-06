@@ -50,7 +50,7 @@ sub exec {
 
 sub description {
     my $class = shift;
-    return `perldoc -t $class`;
+    return { result => `perldoc -t $class` || '' };
 }
 
 1;
