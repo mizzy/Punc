@@ -20,10 +20,10 @@ sub _command {
         # TODO: これじゃほんとはだめ。
         # サービス名 = プロセス名を仮定しているので。
         `start-stop-daemon --stop --test --name $service`;
-        return $?; # TODO: $? >> 8 を返した方がいい？
+        return { result => $? }; # TODO: $? >> 8 を返した方がいい？
     }
     else {
-        ## TODO: エラー時に何を返すか考える
+        return { error => "no such service: $service" };
     }
 }
 

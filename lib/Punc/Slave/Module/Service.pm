@@ -1,7 +1,5 @@
 package Punc::Slave::Module::Service;
 
-use strict;
-use warnings;
 use Moose;
 extends 'Punc::Slave::Module';
 
@@ -32,8 +30,9 @@ Punc::Slave::Module::Service is the Punc module for service control.
 
 =head1 METHODS
 
-=head2 status
+=head2 status({ service => 'service name' })
 
 Show service status.
+
 
 =cut

@@ -23,11 +23,23 @@ for my $result ( @$results ) {
             return unless -f $file;
             my $dest_file = $file;
             $dest_file =~ s!^$src_module_dir/!!g;
+            my $dest_path = file($dest_module_dir, $dest_file)->stringify;
 
             my $punc = Punc::Client->new($result->{host});
+            my ( $dest_md5sum )
+                = (
+                    split ' ',
+                    $punc->file->md5sum({
+                        file => $dest_path
+                    })->[0]->{response}->{result}
+                );
+            my ( $src_md5sum ) = ( split ' ', `md5sum $file` );
+
+            return if $src_md5sum eq $dest_md5sum;
+
             $punc->file->copy({
                 src  => $file->stringify,
-                dest => file($dest_module_dir, $dest_file)->stringify,
+                dest => $dest_path,
             });
         }
     );

@@ -38,15 +38,15 @@ sub run {
             my $module = $r->url->path;
             $module =~ s!^/!!;
             my $content = JSON::from_json($r->content);
-            my $result  = $self->handle_request(
+            my $res = $self->handle_request(
                 $module,
                 $content->{method},
                 $content->{params},
             );
 
             my $json = to_json({
-                result => $result,
-                error  => undef,
+                result => $res->{result},
+                error  => $res->{error},
             });
 
             my $response = HTTP::Response->new;

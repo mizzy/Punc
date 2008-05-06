@@ -16,10 +16,10 @@ sub _command {
     my ( $self, $service, $command ) = @_;
     if ( -f "/etc/init.d/$service" ) {
         `/sbin/service $service $command`;
-        return $?;
+        return { result => $? };
     }
     else {
-        ## TODO: エラー時に何を返すか考える
+        return { error => "no such service: $service" };
     }
 }
 

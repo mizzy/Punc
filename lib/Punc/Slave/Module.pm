@@ -4,10 +4,11 @@ use strict;
 use warnings;
 use Punc::Util;
 use Moose;
-use MooseX::ClassAttribute;
 use Module::Pluggable;
 
-class_has 'default_for' => ( isa => 'HashRef', is => 'rw', default => sub { {} } );
+extends 'Class::Data::Inheritable';
+
+__PACKAGE__->mk_classdata('default_for');
 
 sub import {
     my ( $class, $args ) = @_;
@@ -25,7 +26,6 @@ sub new {
 
 sub delegate {
     my $self = shift;
-
     $self->search_path( new => ref $self );
     my @modules = ( $self->plugins, ref $self );
     my $module_to_delegate;
