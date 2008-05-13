@@ -16,14 +16,14 @@ my $options = get_options();
 
 my $punc = Punc::Client->new($target);
 
-my $res = $punc->$module->$method($options);
+my $results = $punc->$module->$method($options);
 
-for (@$res) {
+while ( my $result = $results->next ) {
     if ( $method eq 'description' || $method eq 'desc' ) {
-        print $_->{response}->{result};
+        print $result->result;
     }
     else {
-        print to_json($_) . "\n";
+        print to_json($result->as_hash) . "\n";
     }
 }
 

@@ -18,7 +18,7 @@ sub copy {
 
     open my $fh, '>', $dest_file or do {
         Punc->context->log( error => $! );
-        return { error => $! };
+        return $self->error($!);
     };
 
     print $fh $args->{content};

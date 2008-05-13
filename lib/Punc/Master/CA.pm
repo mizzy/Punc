@@ -61,4 +61,14 @@ sub sign {
     unlink $csr;
 }
 
+sub list {
+    my $self = shift;
+    my @csrs = glob(File::Spec->catfile($self->{csrdir}, '*.csr'));
+    for my $csr ( @csrs ) {
+        my ( $host ) = ( $csr =~ m!([^/]+)\.csr$! );
+        print "$host\n";
+    }
+
+}
+
 1;

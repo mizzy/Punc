@@ -29,8 +29,8 @@ sub _find_or_request_cert {
 
     $self->{ssldir}  = File::Spec->catdir($self->{confdir}, 'ssl');
     $self->{certdir} = File::Spec->catdir($self->{ssldir}, 'certs');
-    $self->{keydir} = File::Spec->catdir($self->{ssldir}, 'keys');
-    $self->{csrdir} = File::Spec->catdir($self->{ssldir}, 'csrs');
+    $self->{keydir}  = File::Spec->catdir($self->{ssldir}, 'keys');
+    $self->{csrdir}  = File::Spec->catdir($self->{ssldir}, 'csrs');
 
     mkpath($self->{certdir}) unless -d $self->{certdir};
     mkpath($self->{csrdir}) unless -d $self->{csrdir};
@@ -103,6 +103,11 @@ sub handle_request {
         my $module_to_delegate = $obj->delegate;
         if ( $module_to_delegate ) {
             $res = $module_to_delegate->$method($args);
+            if ( defined $res ) {
+                $res = { result => $res };
+            } else {
+                $res = { error => $module_to_delegate->errstr };
+            }
         }
         else {
             Punc->context->log( error => $obj->errstr );

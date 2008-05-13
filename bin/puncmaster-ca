@@ -38,7 +38,7 @@ sub sign {
 
 
 sub list {
-
+    $ca->list();
 }
 
 __END__

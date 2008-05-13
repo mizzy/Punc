@@ -17,6 +17,7 @@ sub get_hosts {
     for my $file ( @files ) {
         if ( $file =~ /$args->{target}/ ) {
             my $host = basename($file, '.cert');
+            next if $host eq 'ca';
             push @hosts, $host;
         }
     }

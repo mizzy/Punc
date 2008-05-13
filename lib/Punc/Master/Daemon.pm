@@ -107,7 +107,7 @@ sub handle_request {
     my $cacert = do { local $/; <$cacert_fh> };
     close $cacert_fh;
 
-    return { cert => $cert, cacert => $cacert };
+    return { result => { cert => $cert, cacert => $cacert } };
 }
 
 
