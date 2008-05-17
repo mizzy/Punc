@@ -1,13 +1,15 @@
 package Punc::Master::Daemon;
 
-use strict;
-use warnings;
+use Moose;
 use base qw( Punc::Daemon );
 use File::Spec;
 use File::Path;
 use Punc::Master::CA;
 use Crypt::OpenSSL::CA;
 use Crypt::OpenSSL::RSA;
+
+extends 'Punc::Daemon';
+with    'Punc::Daemon::Role';
 
 sub new {
     my $class = shift;

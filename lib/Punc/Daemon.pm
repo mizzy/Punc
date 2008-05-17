@@ -1,7 +1,6 @@
 package Punc::Daemon;
 
-use strict;
-use warnings;
+use Moose;
 
 use HTTP::Daemon::SSL;
 use HTTP::Status;
@@ -59,5 +58,11 @@ sub run {
         undef($c);
     }
 }
+
+package Punc::Daemon::Role;
+
+use Moose::Role;
+
+requires 'handle_request';
 
 1;

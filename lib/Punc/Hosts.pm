@@ -6,6 +6,6 @@ package Punc::Hosts::Role;
 
 use Moose::Role;
 
-require 'get_hosts';
+requires 'get_hosts';
 
 1;

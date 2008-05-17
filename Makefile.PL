@@ -23,7 +23,11 @@ requires $_ for (qw/
                        Class::ErrorHandler
                    /);
 
-build_requires 'Test::More';
+build_requires $_ for (qw/
+                             Test::More
+                             File::Temp
+                         /);
+
 use_test_base;
 auto_include;
 WriteAll;

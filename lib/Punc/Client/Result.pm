@@ -1,28 +1,22 @@
 package Punc::Client::Result;
 
-use strict;
-use warnings;
+use Moose;
 our $AUTOLOAD;
 
-sub new {
-    my ( $class, $args ) = @_;
-    bless $args, $class;
+has 'response' => ( is => 'rw' );
+
+sub result {
+    shift->{response}->{result};
+}
+
+sub error {
+    shift->{response}->{error};
 }
 
 sub as_hash {
   my $self = shift;
-  my %hash = %$self; 
+  my %hash = %$self;
   return \%hash;
-}
-
-sub result {
-    my $self = shift;
-    return $self->{response}->{result};
-}
-
-sub error {
-    my $self = shift;
-    return $self->{response}->{error};    
 }
 
 sub AUTOLOAD {

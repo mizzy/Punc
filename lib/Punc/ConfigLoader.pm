@@ -1,13 +1,7 @@
 package Punc::ConfigLoader;
 
-use strict;
-use warnings;
+use Moose;
 use YAML;
-
-sub new {
-    my $class = shift;
-    bless {}, $class;
-}
 
 sub load {
     my ( $self, $file ) = @_;

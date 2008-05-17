@@ -1,22 +1,22 @@
 package Punc;
 
-use strict;
-use warnings;
 our $VERSION = '0.01';
-
 use Pfacter;
 use UNIVERSAL::require;
+use Moose;
+use MooseX::ClassAttribute;
 
-my $context;
-sub context {
-    $context = $_[1] if $_[1];
-    return $context;
-}
+class_has context => (
+    is      => 'rw',
+    isa     => 'Punc',
+    lazy    => 1,
+    default => sub { Punc->new },
+);
 
-sub new {
-    my $class = shift;
-    my $self = bless {}, $class;
-    $self->context($self);
+sub logger {
+    my $self = shift;
+    require Punc::Logger::StdErr;
+    $self->{logger} ||= 'Punc::Logger::StdErr';
 }
 
 sub fact {
@@ -42,12 +42,6 @@ sub _pfact {
     my $pfact = $module->pfact($self);
     chomp $pfact;
     return $pfact;
-}
-
-sub logger {
-    my $self = shift;
-    require Punc::Logger::StdErr;
-    $self->{logger} ||= 'Punc::Logger::StdErr';
 }
 
 sub log {
@@ -90,7 +84,7 @@ puncmasterd は SSL 証明書発行/管理用デーモンです。
 
   # ./bin/puncd
 
-puncmasterdとは別ホスト上で動かす場合、./etc/puncd.yaml の puncmaster_host を適宜変更してから puncd を起動してください。
+puncmasterd とは別ホスト上で動かす場合、./etc/puncd.yaml の puncmaster_host を適宜変更してから puncd を起動してください。
 
 =head2 puncmaster-ca コマンドによる証明書への署名
 

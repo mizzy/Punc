@@ -1,7 +1,6 @@
 package Punc::Client::Request;
 
-use strict;
-use warnings;
+use Moose;
 use JSON;
 use JSON::RPC::Client;
 use Punc::Client::Response;

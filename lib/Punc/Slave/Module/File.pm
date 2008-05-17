@@ -1,9 +1,8 @@
 package Punc::Slave::Module::File;
 
-use strict;
-use warnings;
 use Path::Class qw( dir file );
 use Punc::Slave::Module { operatingsystem => [ qw/ .* / ] };
+use Moose;
 
 sub md5sum {
     my ( $self, $args ) = @_;

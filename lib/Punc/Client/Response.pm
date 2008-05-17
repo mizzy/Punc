@@ -1,25 +1,26 @@
 package Punc::Client::Response;
 
-use strict;
-use warnings;
+use Moose;
 use Punc::Client::Result;
 
-sub new {
-    my $self = {
-        index => 0,
-        results => [],
-    };
-    bless $self, shift;
-}
+has 'index' => ( isa => 'Int', is => 'rw', default => 0 );
+
+has 'results' => (
+    isa     => 'ArrayRef[Punc::Client::Result]',
+    is      => 'rw',
+    default => sub { [] },
+);
 
 sub add {
     my ( $self, $args ) = @_;
-    push @{$self->{results}}, Punc::Client::Result->new($args);
+    push @{$self->results}, Punc::Client::Result->new($args);
 }
 
 sub next {
     my $self = shift;
-    return $self->{results}->[ $self->{index}++ ];
+    my $current = $self->results->[ $self->index ];
+    $self->index( $self->index + 1 );
+    return $current;
 }
 
 1;

@@ -1,7 +1,5 @@
 package Punc::Slave::Module::Service::Debian;
 
-use strict;
-use warnings;
 use Punc::Slave::Module::Service { operatingsystem => [ qw / debian ubuntu / ] };
 use Moose;
 

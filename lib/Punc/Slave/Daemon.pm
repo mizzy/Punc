@@ -1,14 +1,14 @@
 package Punc::Slave::Daemon;
 
-use strict;
-use warnings;
+use Moose;
 use File::Spec;
 use Crypt::OpenSSL::PKCS10 qw( :const );
 use JSON::RPC::Client;
 use JSON;
 use File::Path;
 
-use base qw( Punc::Daemon );
+extends 'Punc::Daemon';
+with 'Punc::Daemon::Role';
 
 sub new {
     my $class = shift;

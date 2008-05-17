@@ -13,3 +13,5 @@ punc
 SSL
 puncmaster
 puncmasterd
+puncd
+md5sum
