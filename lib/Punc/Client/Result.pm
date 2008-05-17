@@ -25,7 +25,7 @@ sub AUTOLOAD {
     (my $method = $AUTOLOAD) =~ s/^.*:://;
     return if $method eq 'DESTROY';
 
-    return $self->{response}->{result}->{$method};
+    return $self->response->{result}->{$method};
 }
 
 1;
