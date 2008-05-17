@@ -46,6 +46,7 @@ sub _pfact {
 
 sub log {
     my ( $self, $level, $message ) = @_;
+    $self->logger->require;
     $self->logger->log( $level => $message );
 }
 
