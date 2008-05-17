@@ -40,8 +40,8 @@ sub AUTOLOAD {
     return if $module eq 'DESTROY';
 
     return Punc::Client::Request->new({
-        conf   => $self->{conf},
-        hosts  => $self->{hosts},
+        conf   => $self->conf,
+        hosts  => $self->hosts,
         module => $module,
     });
 }

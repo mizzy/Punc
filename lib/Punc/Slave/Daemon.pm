@@ -10,36 +10,42 @@ use File::Path;
 extends 'Punc::Daemon';
 with 'Punc::Daemon::Role';
 
+has 'keydir'  => ( is => 'rw', isa => 'Str' );
+has 'certdir' => ( is => 'rw', isa => 'Str' );
+has 'ssldir'  => ( is => 'rw', isa => 'Str' );
+has 'csrdir'  => ( is => 'rw', isa => 'Str' );
+
 sub new {
     my $class = shift;
     my $self = $class->SUPER::new(@_);
 
-    $self->_find_or_request_cert($self->{context});
+    $self->_find_or_request_cert($self->context);
 
-    my $fqdn = $self->{context}->fact('fqdn');
+    my $fqdn = $self->context->fact('fqdn');
 
-    $self->{ssl_key}  = File::Spec->catfile($self->{keydir}, "${fqdn}.key");
-    $self->{ssl_cert} = File::Spec->catfile($self->{certdir}, "${fqdn}.cert");
-    $self->{ca_cert}  = File::Spec->catfile($self->{certdir}, 'ca.cert');
+    $self->ssl_key( File::Spec->catfile($self->keydir, "${fqdn}.key") );
+    $self->ssl_cert( File::Spec->catfile($self->certdir, "${fqdn}.cert") );
+    $self->ca_cert( File::Spec->catfile($self->certdir, 'ca.cert') );
+
     return $self;
 }
 
 sub _find_or_request_cert {
     my ( $self, $c ) = @_;
 
-    $self->{ssldir}  = File::Spec->catdir($self->{confdir}, 'ssl');
-    $self->{certdir} = File::Spec->catdir($self->{ssldir}, 'certs');
-    $self->{keydir}  = File::Spec->catdir($self->{ssldir}, 'keys');
-    $self->{csrdir}  = File::Spec->catdir($self->{ssldir}, 'csrs');
+    $self->ssldir( File::Spec->catdir($self->confdir, 'ssl') );
+    $self->certdir( File::Spec->catdir($self->ssldir, 'certs') );
+    $self->keydir( File::Spec->catdir($self->ssldir, 'keys') );
+    $self->csrdir( File::Spec->catdir($self->ssldir, 'csrs') );
 
-    mkpath($self->{certdir}) unless -d $self->{certdir};
-    mkpath($self->{csrdir}) unless -d $self->{csrdir};
-    unless ( -d $self->{keydir} ) {
-        mkpath($self->{keydir});
-        chmod oct('0700'), $self->{keydir};
+    mkpath($self->certdir) unless -d $self->certdir;
+    mkpath($self->csrdir) unless -d $self->csrdir;
+    unless ( -d $self->keydir ) {
+        mkpath($self->keydir);
+        chmod oct('0700'), $self->keydir;
     }
 
-    my $cert = File::Spec->catfile($self->{certdir}, $c->fact('fqdn') . '.cert');
+    my $cert = File::Spec->catfile($self->certdir, $c->fact('fqdn') . '.cert');
     unless ( -f $cert ) {
         $self->_request_cert($c);
     }
@@ -53,13 +59,13 @@ sub _request_cert {
     $req->set_subject("/CN=$fqdn");
     $req->sign();
 
-    $req->write_pem_req( File::Spec->catfile( $self->{csrdir}, "${fqdn}.csr" ) );
-    $req->write_pem_pk( File::Spec->catfile( $self->{keydir}, "${fqdn}.key" ) );
+    $req->write_pem_req( File::Spec->catfile( $self->csrdir, "${fqdn}.csr" ) );
+    $req->write_pem_pk( File::Spec->catfile( $self->keydir, "${fqdn}.key" ) );
 
     my $client = JSON::RPC::Client->new;
     $client->ua->timeout(0);
-    my $host   = $self->{conf}->{puncmaster_host} || 'localhost';
-    my $port   = $self->{conf}->{puncmaster_port} || 7081;
+    my $host   = $self->conf->{puncmaster_host} || 'localhost';
+    my $port   = $self->conf->{puncmaster_port} || 7081;
     my $url    = "https://$host:$port/cert";
 
     my $callobj = {

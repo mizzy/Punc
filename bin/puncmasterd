@@ -31,5 +31,6 @@ my $daemon = Punc::Master::Daemon->new({
     conf    => $conf,
 });
 
-$daemon->run;
+$daemon->prepare->run;
+
 

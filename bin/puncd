@@ -34,4 +34,4 @@ my $daemon = Punc::Slave::Daemon->new({
     context => Punc->new->context,
 });
 
-$daemon->run;
+$daemon->prepare->run;

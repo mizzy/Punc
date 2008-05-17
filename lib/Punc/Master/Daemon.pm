@@ -15,20 +15,22 @@ sub new {
     my $class = shift;
     my $self = $class->SUPER::new(@_);
 
-    $self->{ca} = Punc::Master::CA->new({
-        ssldir => File::Spec->catdir($self->{confdir}, 'ssl'),
-    });
+    $self->ca(
+        Punc::Master::CA->new({
+            ssldir => File::Spec->catdir($self->confdir, 'ssl'),
+        })
+      );
 
-    $self->_find_or_create_ca_cert($self->{context});
+    $self->_find_or_create_ca_cert($self->context);
 
-    $self->{ssl_key}  = File::Spec->catfile($self->{ca}->{cadir}, 'ca.key');
-    $self->{ssl_cert} = File::Spec->catfile($self->{ca}->{cadir}, 'ca.cert'),
+    $self->ssl_key( File::Spec->catfile($self->ca->cadir, 'ca.key') );
+    $self->ssl_cert( File::Spec->catfile($self->ca->cadir, 'ca.cert') );
     return $self;
 }
 
 sub _find_or_create_ca_cert {
     my ( $self, $c ) = @_;
-    my $cadir = $self->{ca}->{cadir};
+    my $cadir = $self->ca->cadir;
     unless ( -d $cadir ) {
         mkpath($cadir);
         chmod oct('0700'), $cadir;
@@ -45,7 +47,7 @@ sub _create_self_signed_cert {
 
     # 鍵作成
     my $rsa = Crypt::OpenSSL::RSA->generate_key(1024);
-    open my $out, '>', File::Spec->catfile($self->{ca}->{cadir}, 'ca.key') or die $!;
+    open my $out, '>', File::Spec->catfile($self->ca->cadir, 'ca.key') or die $!;
     print $out $rsa->get_private_key_string;
     close $out;
 
@@ -65,11 +67,11 @@ sub _create_self_signed_cert {
     $x509->set_notAfter('20090101000000Z');
 
     my $pem = $x509->sign($privkey, 'sha1');
-    open my $cert, '>', File::Spec->catfile($self->{ca}->{cadir}, 'ca.cert') or die $!;
+    open my $cert, '>', File::Spec->catfile($self->ca->cadir, 'ca.cert') or die $!;
     print $cert $pem;
     close $cert;
 
-    open my $srl, '>', File::Spec->catfile($self->{ca}->{cadir}, 'ca.srl') or die $!;
+    open my $srl, '>', File::Spec->catfile($self->ca->cadir, 'ca.srl') or die $!;
     print $srl '01';
     close $srl;
 }
@@ -80,12 +82,12 @@ sub handle_request {
 
     # CSR 取得
     my $csr = $args->{csr};
-    my $hostname = $self->{ca}->get_hostname_from_csr($csr);
+    my $hostname = $self->ca->get_hostname_from_csr($csr);
 
-    my $csrdir = $self->{ca}->{csrdir};
+    my $csrdir = $self->ca->csrdir;
     mkpath($csrdir) unless -d $csrdir;
 
-    $self->{ca}->save_csr($csr);
+    $self->ca->save_csr($csr);
 
     my $autosign = $self->{conf}->{autosign} || '';
     $autosign =~ s/\*/\.\*/g;
@@ -100,7 +102,7 @@ sub handle_request {
     }
 
     open my $cert_fh, '<', File::Spec->catfile(
-        $self->{ca}->{certdir},
+        $self->ca->certdir,
         "${hostname}.cert"
     ) or do { return { error => $! } };
 
@@ -108,7 +110,7 @@ sub handle_request {
     close $cert_fh;
 
     open my $cacert_fh, '<', File::Spec->catfile(
-        $self->{ca}->{cadir},
+        $self->ca->cadir,
         'ca.cert'
     ) or do { return { error => $! } };
 

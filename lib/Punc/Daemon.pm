@@ -7,29 +7,39 @@ use HTTP::Status;
 use JSON;
 use UNIVERSAL::require;
 
-sub new {
-    my ( $class, $args ) = @_;
+has 'port'     => ( is => 'rw', isa => 'Int' );
+has 'confdir'  => ( is => 'rw', isa => 'Str' );
+has 'conf'     => ( is => 'rw', isa => 'HashRef' );
+has 'context'  => ( is => 'rw', isa => 'Punc' );
+has 'ssl_key'  => ( is => 'rw', isa => 'Str' );
+has 'ssl_cert' => ( is => 'rw', isa => 'Str' );
+has 'ca_cert'  => ( is => 'rw', isa => 'Str' );
+has 'daemon' => ( is => 'rw', isa => 'HTTP::Daemon::SSL' );
 
-    my $self = {
-        %$args,
-    };
-
-    bless $self, $class;
-}
-
-sub run {
+sub prepare {
     my $self = shift;
 
     my $ssl_verify_mode = ref $self eq 'Punc::Master::Daemon' ? 0x00 : 0x07;
 
-    my $d = HTTP::Daemon::SSL->new(
-        LocalPort       => $self->{port},
-        ReuseAddr       => 1,
-        SSL_key_file    => $self->{ssl_key},
-        SSL_cert_file   => $self->{ssl_cert},
-        SSL_ca_file     => $self->{ca_cert} || '',
-        SSL_verify_mode => $ssl_verify_mode,
-    ) || die $!;
+    $self->daemon(
+        HTTP::Daemon::SSL->new(
+            LocalPort       => $self->port,
+            ReuseAddr       => 1,
+            SSL_key_file    => $self->ssl_key,
+            SSL_cert_file   => $self->ssl_cert,
+            SSL_ca_file     => $self->ca_cert || '',
+            SSL_verify_mode => $ssl_verify_mode,
+        )
+    );
+
+    die $! unless $self->daemon;
+
+    return $self;
+}
+
+sub run {
+    my $self = shift;
+    my $d = $self->daemon;
 
     print "Please contact me at: <URL:", $d->url, ">\n";
     while ( my $c = $d->accept ) {
