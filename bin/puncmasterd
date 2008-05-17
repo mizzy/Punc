@@ -8,19 +8,27 @@ use lib File::Spec->catdir("$FindBin::Bin/..", 'lib');
 use Punc;
 use Punc::Master::Daemon;
 use Getopt::Long;
+use Punc::ConfigLoader;
 
 GetOptions(
-    '--port=i'    => \my $port,
-    '--confdir=s' => \my $confdir,
+    '--port=i'     => \my $port,
+    '--confdir=s'  => \my $confdir,
+    '--autosign=s' => \my $autosign,
 );
 
 $port    ||= 7081;
 $confdir ||= "$FindBin::Bin/../etc";
 
+my $yaml = File::Spec->catfile($confdir, 'puncmasterd.yaml');
+
+my $conf = -f $yaml ? Punc::ConfigLoader->new->load($yaml) : {};
+$conf->{autosign} ||= $autosign;
+
 my $daemon = Punc::Master::Daemon->new({
     port    => $port,
     confdir => $confdir,
     context => Punc->new->context,
+    conf    => $conf,
 });
 
 $daemon->run;

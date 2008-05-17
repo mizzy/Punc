@@ -20,6 +20,7 @@ requires $_ for (qw/
                        Crypt::SSLeay
                        Moose
                        MooseX::ClassAttribute
+                       Class::ErrorHandler
                    /);
 
 build_requires 'Test::More';

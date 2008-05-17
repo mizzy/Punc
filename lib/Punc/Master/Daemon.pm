@@ -85,10 +85,16 @@ sub handle_request {
 
     $self->{ca}->save_csr($csr);
 
-    ### TODO: 自動署名
-    while ( 1 ) {
-        last if $self->{ca}->is_signed($csr);
-        sleep 1;
+    my $autosign = $self->{conf}->{autosign} || '';
+    $autosign =~ s/\*/\.\*/g;
+    if ( $hostname =~ /$autosign/ ) {
+        $self->{ca}->sign($hostname);
+    }
+    else {
+        while ( 1 ) {
+            last if $self->{ca}->is_signed($csr);
+            sleep 1;
+        }
     }
 
     open my $cert_fh, '<', File::Spec->catfile(
