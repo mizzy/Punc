@@ -44,6 +44,8 @@ sub AUTOLOAD {
         hosts  => $self->hosts,
         module => $module,
     });
+
+    return $client->init;
 }
 
 1;

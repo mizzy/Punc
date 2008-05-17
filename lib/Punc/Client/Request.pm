@@ -8,10 +8,24 @@ use File::Spec;
 
 our $AUTOLOAD;
 
-sub new {
-    my ( $class, $args ) = @_;
+use Moose;
 
-    my $confdir = $args->{conf}->{confdir};
+has 'conf'   => ( is => 'rw', isa => 'HashRef' );
+has 'hosts'  => ( is => 'rw', isa => 'ArrayRef' );
+has 'module' => ( is => 'rw', isa => 'Str' );
+has 'method' => ( is => 'rw', isa => 'Str' );
+has 'args'   => ( is => 'rw', isa => 'HashRef' );
+
+has 'client' => (
+    is      => 'rw',
+    isa     => 'JSON::RPC::Client',
+    default => sub { JSON::RPC::Client->new },
+);
+
+sub init {
+    my ( $self, $args ) = @_;
+
+    my $confdir = $self->conf->{confdir};
 
     $ENV{HTTPS_VERSION}   = 3;
     $ENV{HTTPS_CERT_FILE} = File::Spec->catfile(
@@ -21,24 +35,22 @@ sub new {
         $confdir, 'ssl', 'ca', 'ca.key'
     );
 
-    $args->{client} = JSON::RPC::Client->new;
-
-    bless $args, $class;
-}
+    return $self;
+};
 
 sub request {
     my $self = shift;
 
     my $response = Punc::Client::Response->new;
-    for my $host ( @{ $self->{hosts} } ) {
+    for my $host ( @{ $self->hosts } ) {
 
         my $url     = "https://$host:7080/$self->{module}";
         my $callobj = {
-            method  => $self->{method},
-            params  => $self->{args},
+            method  => $self->method,
+            params  => $self->args,
         };
 
-        my $res = $self->{client}->call($url, $callobj) or warn @?;
+        my $res = $self->client->call($url, $callobj) or warn @?;
 
         if( $res ) {
             $response->add({
@@ -57,10 +69,10 @@ sub AUTOLOAD {
     (my $method = $AUTOLOAD) =~ s/^.*:://;
     return if $method eq 'DESTROY';
 
-    $self->{method} = $method;
-    $self->{args}   = $args;
+    $self->method($method);
+    $self->args($args);
 
-    if ( $self->{module} eq 'file' and $self->{method} eq 'copy' ) {
+    if ( $self->module eq 'file' and $self->method eq 'copy' ) {
         open my $fh, '<', $args->{src} or die $!;
         $args->{content} = do { local $/; <$fh> };
         close $fh;
