@@ -11,6 +11,12 @@ use Crypt::OpenSSL::RSA;
 extends 'Punc::Daemon';
 with    'Punc::Daemon::Role';
 
+has 'ca' => (
+    is      => 'rw',
+    isa     => 'Punc::Master::CA',
+    default => sub { Punc::Master::CA->new },
+);
+
 sub new {
     my $class = shift;
     my $self = $class->SUPER::new(@_);
@@ -20,6 +26,7 @@ sub new {
             ssldir => File::Spec->catdir($self->confdir, 'ssl'),
         })
       );
+    $self->ca->init;
 
     $self->_find_or_create_ca_cert($self->context);
 

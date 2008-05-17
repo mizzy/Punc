@@ -9,15 +9,11 @@ has 'csrdir'  => ( is => 'rw', isa => 'Str' );
 has 'certdir' => ( is => 'rw', isa => 'Str' );
 has 'cadir'   => ( is => 'rw', isa => 'Str' );
 
-sub new {
-    my ( $class, $args ) = @_;
-
-    bless {
-        %$args,
-        csrdir  => File::Spec->catdir($args->{ssldir}, 'csrs'),
-        certdir => File::Spec->catdir($args->{ssldir}, 'certs'),
-        cadir   => File::Spec->catdir($args->{ssldir}, 'ca'),
-    }, $class;
+sub init {
+    my $self = shift;
+    $self->csrdir( File::Spec->catdir($self->ssldir, 'csrs') );
+    $self->certdir( File::Spec->catdir($self->ssldir, 'certs') );
+    $self->cadir( File::Spec->catdir($self->ssldir, 'ca') );
 }
 
 sub get_hostname_from_csr {
