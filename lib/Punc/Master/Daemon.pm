@@ -17,9 +17,8 @@ has 'ca' => (
     default => sub { Punc::Master::CA->new },
 );
 
-sub new {
-    my $class = shift;
-    my $self = $class->SUPER::new(@_);
+sub init {
+    my $self = shift;
 
     $self->ca(
         Punc::Master::CA->new({

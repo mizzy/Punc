@@ -20,7 +20,7 @@ requires $_ for (qw/
                        Crypt::SSLeay
                        Moose
                        MooseX::ClassAttribute
-                       Class::ErrorHandler
+                       Class::MakeMethods
                    /);
 
 build_requires $_ for (qw/

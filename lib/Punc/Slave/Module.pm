@@ -2,10 +2,7 @@ package Punc::Slave::Module;
 
 use Moose;
 use Module::Pluggable;
-
-extends 'Class::Data::Inheritable', 'Class::ErrorHandler';
-
-__PACKAGE__->mk_classdata('default_for');
+use Class::MakeMethods ( 'Standard::Inheritable:scalar' => 'default_for' );
 
 sub import {
     my ( $class, $args ) = @_;
@@ -13,11 +10,6 @@ sub import {
     no strict 'refs';
     unshift @{"$pkg\::ISA"}, $class;
     $pkg->default_for($args);
-}
-
-sub new {
-    my $class = shift;
-    bless {}, $class;
 }
 
 sub delegate {
@@ -51,6 +43,23 @@ sub delegate {
 sub description {
     my $class = shift;
     return { result => `perldoc -t $class` || '' };
+}
+
+# code from Class::ErrorHandler
+use vars qw( $ERROR );
+
+sub error {
+    my $msg = $_[1] || '';
+    if (ref($_[0])) {
+        $_[0]->{_errstr} = $msg;
+    } else {
+        $ERROR = $msg;
+    }
+    return;
+}
+
+sub errstr {
+    ref($_[0]) ? $_[0]->{_errstr} : $ERROR
 }
 
 1;

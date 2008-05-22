@@ -29,7 +29,7 @@ my $daemon = Punc::Master::Daemon->new({
     confdir => $confdir,
     context => Punc->new->context,
     conf    => $conf,
-});
+})->init;
 
 $daemon->prepare->run;
 

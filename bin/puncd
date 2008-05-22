@@ -32,6 +32,6 @@ my $daemon = Punc::Slave::Daemon->new({
     confdir => $confdir,
     conf    => $conf,
     context => Punc->new->context,
-});
+})->init;
 
 $daemon->prepare->run;

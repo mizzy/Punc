@@ -1,7 +1,6 @@
 package Punc::Client;
 
 use Moose;
-our $VERSION = '0.01';
 our $AUTOLOAD;
 use Punc::ConfigLoader;
 use Punc::Client::Request;

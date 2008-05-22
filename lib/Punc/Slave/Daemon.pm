@@ -15,9 +15,8 @@ has 'certdir' => ( is => 'rw', isa => 'Str' );
 has 'ssldir'  => ( is => 'rw', isa => 'Str' );
 has 'csrdir'  => ( is => 'rw', isa => 'Str' );
 
-sub new {
-    my $class = shift;
-    my $self = $class->SUPER::new(@_);
+sub init {
+    my $self = shift;
 
     $self->_find_or_request_cert($self->context);
 
