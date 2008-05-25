@@ -10,32 +10,74 @@ use File::Path;
 extends 'Punc::Daemon';
 with 'Punc::Daemon::Role';
 
-has 'keydir'  => ( is => 'rw', isa => 'Str' );
-has 'certdir' => ( is => 'rw', isa => 'Str' );
-has 'ssldir'  => ( is => 'rw', isa => 'Str' );
-has 'csrdir'  => ( is => 'rw', isa => 'Str' );
+has 'ssldir' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->confdir, 'ssl') },
+    lazy    => 1,
+);
 
-sub init {
+has 'keydir'  => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->ssldir, 'keys') },
+    lazy    => 1,
+);
+
+has 'csrdir'  => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->ssldir, 'csrs') },
+    lazy    => 1,
+);
+
+has 'certdir' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->ssldir, 'certs') },
+    lazy    => 1,
+);
+
+has 'fqdn'    => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { Punc->context->fact('fqdn') },
+);
+
+has 'ssl_key' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub {
+        my $self = shift;
+        File::Spec->catfile($self->keydir, $self->fqdn . '.key');
+    },
+    lazy    => 1,
+);
+
+has 'ssl_cert' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub {
+        my $self = shift;
+        File::Spec->catfile($self->certdir, $self->fqdn . '.cert');
+    },
+    lazy    => 1,
+);
+
+has 'ca_cert' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catfile(shift->certdir, 'ca.cert'); },
+    lazy    => 1,
+);
+
+before 'run' => sub {
     my $self = shift;
-
     $self->_find_or_request_cert($self->context);
-
-    my $fqdn = $self->context->fact('fqdn');
-
-    $self->ssl_key( File::Spec->catfile($self->keydir, "${fqdn}.key") );
-    $self->ssl_cert( File::Spec->catfile($self->certdir, "${fqdn}.cert") );
-    $self->ca_cert( File::Spec->catfile($self->certdir, 'ca.cert') );
-
-    return $self;
-}
+};
 
 sub _find_or_request_cert {
     my ( $self, $c ) = @_;
-
-    $self->ssldir( File::Spec->catdir($self->confdir, 'ssl') );
-    $self->certdir( File::Spec->catdir($self->ssldir, 'certs') );
-    $self->keydir( File::Spec->catdir($self->ssldir, 'keys') );
-    $self->csrdir( File::Spec->catdir($self->ssldir, 'csrs') );
 
     mkpath($self->certdir) unless -d $self->certdir;
     mkpath($self->csrdir) unless -d $self->csrdir;

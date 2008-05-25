@@ -17,7 +17,21 @@ has 'ca' => (
     default => sub { Punc::Master::CA->new },
 );
 
-sub init {
+has 'ssl_key' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catfile(shift->ca->cadir, 'ca.key') },
+    lazy    => 1,
+);
+
+has 'ssl_cert' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catfile(shift->ca->cadir, 'ca.cert') },
+    lazy    => 1,
+);
+
+before 'run' => sub {
     my $self = shift;
 
     $self->ca(
@@ -25,14 +39,9 @@ sub init {
             ssldir => File::Spec->catdir($self->confdir, 'ssl'),
         })
       );
-    $self->ca->init;
 
     $self->_find_or_create_ca_cert($self->context);
-
-    $self->ssl_key( File::Spec->catfile($self->ca->cadir, 'ca.key') );
-    $self->ssl_cert( File::Spec->catfile($self->ca->cadir, 'ca.cert') );
-    return $self;
-}
+};
 
 sub _find_or_create_ca_cert {
     my ( $self, $c ) = @_;

@@ -20,7 +20,6 @@ GetOptions(
 my $confdir = $options{confdir} || "$FindBin::Bin/../etc";
 my $ssldir  = File::Spec->catdir($confdir, 'ssl');
 my $ca = Punc::Master::CA->new({ ssldir  => $ssldir });
-$ca->init;
 
 for ( qw/ sign list / ) {
     no strict 'refs';

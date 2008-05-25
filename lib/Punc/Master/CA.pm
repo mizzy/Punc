@@ -5,16 +5,24 @@ use File::Spec;
 use File::Path;
 
 has 'ssldir'  => ( is => 'rw', isa => 'Str' );
-has 'csrdir'  => ( is => 'rw', isa => 'Str' );
-has 'certdir' => ( is => 'rw', isa => 'Str' );
-has 'cadir'   => ( is => 'rw', isa => 'Str' );
-
-sub init {
-    my $self = shift;
-    $self->csrdir( File::Spec->catdir($self->ssldir, 'csrs') );
-    $self->certdir( File::Spec->catdir($self->ssldir, 'certs') );
-    $self->cadir( File::Spec->catdir($self->ssldir, 'ca') );
-}
+has 'csrdir'  => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->ssldir, 'csrs') },
+    lazy    => 1,
+);
+has 'certdir' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->ssldir, 'certs') },
+    lazy    => 1,
+);
+has 'cadir'   => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catdir(shift->ssldir, 'ca') },
+    lazy    => 1,
+);
 
 sub get_hostname_from_csr {
     my ( $self, $csr ) = @_;
