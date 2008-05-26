@@ -99,7 +99,7 @@ puncmasterd とは別ホスト上で動かす場合、./etc/puncd.yaml の puncm
 =head2 Punc::Client でのモジュール実行
 
   use Punc::Client;
-  my $punc = Punc::Client->new('*');
+  my $punc = Punc::Client->new( target => '*' );
   my $res  = $punc->service->status('httpd');
 
 =head1 TODO

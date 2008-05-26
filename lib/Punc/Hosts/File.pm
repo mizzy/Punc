@@ -9,7 +9,7 @@ with 'Punc::Hosts::Role';
 sub get_hosts {
     my ( $class, $args ) = @_;
 
-    my $confdir = $args->{conf}->{confdir};
+    my $confdir = $args->{conf}->{conf_dir};
     my $certdir = File::Spec->catdir($confdir, 'ssl', 'certs');
     my @files = glob("$certdir/*");
 

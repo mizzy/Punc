@@ -25,7 +25,7 @@ has 'client' => (
 sub init {
     my ( $self, $args ) = @_;
 
-    my $confdir = $self->conf->{confdir};
+    my $confdir = $self->conf->{conf_dir};
 
     $ENV{HTTPS_VERSION}   = 3;
     $ENV{HTTPS_CERT_FILE} = File::Spec->catfile(

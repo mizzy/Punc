@@ -21,7 +21,7 @@ Punc::Slave::Module::Service - Punc module for service control.
   $ sudo punc "*" call service status --service=httpd
 
   # with Punc::Client module
-  my $punc = Punc::Client->new($target);
+  my $punc = Punc::Client->new( target => $target );
   my $res  = $punc->service->status({ service => 'httpd' });
 
 =head1 DESCRIPTION

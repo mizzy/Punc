@@ -14,7 +14,7 @@ my $module  = shift;
 my $method  = shift;
 my $options = get_options();
 
-my $punc = Punc::Client->new($target);
+my $punc = Punc::Client->new( target => $target );
 
 my $results = $punc->$module->$method($options);
 

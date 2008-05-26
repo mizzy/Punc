@@ -1,7 +1,6 @@
 package Punc::Master::Daemon;
 
 use Moose;
-use base qw( Punc::Daemon );
 use File::Spec;
 use File::Path;
 use Punc::Master::CA;
@@ -14,7 +13,12 @@ with    'Punc::Daemon::Role';
 has 'ca' => (
     is      => 'rw',
     isa     => 'Punc::Master::CA',
-    default => sub { Punc::Master::CA->new },
+    default => sub {
+        Punc::Master::CA->new({
+            ssldir => File::Spec->catdir(shift->confdir, 'ssl'),
+        });
+      },
+    lazy    => 1,
 );
 
 has 'ssl_key' => (
@@ -33,13 +37,6 @@ has 'ssl_cert' => (
 
 before 'run' => sub {
     my $self = shift;
-
-    $self->ca(
-        Punc::Master::CA->new({
-            ssldir => File::Spec->catdir($self->confdir, 'ssl'),
-        })
-      );
-
     $self->_find_or_create_ca_cert($self->context);
 };
 

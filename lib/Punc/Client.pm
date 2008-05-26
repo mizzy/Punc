@@ -1,35 +1,65 @@
 package Punc::Client;
 
 use Moose;
+use Moose::Util::TypeConstraints;
 our $AUTOLOAD;
 use Punc::ConfigLoader;
 use Punc::Client::Request;
 use UNIVERSAL::require;
 use FindBin;
 
-has 'hosts' => ( is => 'rw', isa => 'ArrayRef' );
 has 'conf'  => ( is => 'rw', isa => 'HashRef' );
 
-sub new {
-    my ( $class, $target ) = @_;
+### TODO: confdir のデフォルト値を変更
+has 'conf_dir' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => "$FindBin::Bin/../etc",
+);
 
-    $target =~ s/\*/\.\*/g;
+has 'conf_file' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { File::Spec->catfile(shift->conf_dir, 'punc.yaml') },
+    lazy    => 1,
+);
 
-    ### TODO: confdir のデフォルト値を変更
-    my $confdir = "$FindBin::Bin/../etc";
-    my $yaml    = File::Spec->catfile($confdir, 'punc.yaml');
-    my $conf    = -f $yaml ? Punc::ConfigLoader->new->load($yaml) : {};
-    $conf->{confdir} = $confdir;
+has 'conf' => (
+    is      => 'rw',
+    isa     => 'HashRef',
+    default => sub {
+        my $conf_file = shift->conf_file;
+        -f $conf_file ? Punc::ConfigLoader->new->load($conf_file) : {};
+    },
+    lazy    => 1,
+);
 
-    my $hosts_class = ucfirst $conf->{hosts_class} || 'File';
+coerce 'Str'
+    => from 'Str'
+    => via { s/\*/\.\*/g };
+
+has 'target' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => '.*',
+    coerce  => 1,
+);
+
+sub hosts {
+    my $self = shift;
+
+    $self->conf->{conf_dir} = $self->conf_dir unless $self->conf->{conf_dir};
+
+    my $hosts_class = ucfirst $self->conf->{hosts_class} || 'File';
     $hosts_class = "Punc::Hosts::$hosts_class";
     $hosts_class->require;
-    my $hosts = $hosts_class->get_hosts({ target => $target, conf => $conf });
 
-    bless {
-        hosts => $hosts,
-        conf  => $conf,
-    }, $class;
+    my $hosts = $hosts_class->get_hosts({
+        target => $self->target,
+        conf   => $self->conf,
+    });
+
+    return $hosts;
 }
 
 sub AUTOLOAD {
