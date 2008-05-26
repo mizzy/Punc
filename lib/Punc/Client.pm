@@ -8,8 +8,6 @@ use Punc::Client::Request;
 use UNIVERSAL::require;
 use FindBin;
 
-has 'conf'  => ( is => 'rw', isa => 'HashRef' );
-
 ### TODO: confdir のデフォルト値を変更
 has 'conf_dir' => (
     is      => 'rw',
